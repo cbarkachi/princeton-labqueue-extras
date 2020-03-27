@@ -10,6 +10,6 @@ Download lqsound.user.zip, navigate to chrome://extensions/, turn on "Developer 
 ### Edit:
 I've been told this doesn't work for some people. If this is the case for you, try unzipping lqsound.user.zip file and uploading it with the "Load unpacked" button.
 ## Firefox
-Download Greasemonkey and use lqsound.user.js script as the source file.
+Download Greasemonkey and use lqsound.user.js as the source file.
 ## Other browsers
 Similar solution to Firefox except with different extensions to handle running the script. On Chrome and Microsoft Edge, there's an extension called Tampermonkey that basically does the same thing. On Safari, there's SIMBL/GreaseKit (not sure how these work).
