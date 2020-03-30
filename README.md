@@ -2,7 +2,7 @@
 For use with labqueue.io - allows the user to choose a sound that will play each time a student is added to the queue, either when they first log on or are added through a "reopen." Also allows enabling browser notifications that navigate back to the queue. Configuration options appear below the queue table.
 
 ## @labTA's
-Feel free to modify the source code, especially if you know Javascript! I just learned JS/CSS this week to write this so I'm positive there are more efficient ways of doing things. Notably, because I only have access to the HTML breakdown of the site, I chose to run the main alg by just doing a simple text search of the table for the number of "CLAIM" substrings.
+Feel free to modify the source code, especially if you know Javascript! I just learned JS/CSS this week to write this so I'm positive there are more efficient ways of doing things.
 
 # INSTRUCTIONS TO USE
 ## Chrome:
