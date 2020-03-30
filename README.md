@@ -6,9 +6,8 @@ Feel free to modify the source code, especially if you know Javascript! I just l
 
 # INSTRUCTIONS TO USE
 ## Chrome:
-Download lqsound.user.zip, navigate to chrome://extensions/, turn on "Developer Mode" (top right corner) and drop the zip file anywhere onto the page. Feel free to turn developer mode off again.
-### Edit:
-I've been told this doesn't work for some people. If this is the case for you, try unzipping lqsound.user.zip file and uploading it with the "Load unpacked" button.
+https://chrome.google.com/webstore/detail/cdfnncficbjkiddobflmiiceggikbdgc/publish-accepted?hl=en&authuser=0
+This extension can be found in lqsound.user.zip
 ## Firefox
 Download Greasemonkey and use lqsound.user.js as the source file.
 ## Other browsers
