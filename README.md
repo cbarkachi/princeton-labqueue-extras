@@ -7,6 +7,7 @@ Feel free to modify the source code, especially if you know Javascript! I just l
 # INSTRUCTIONS TO USE
 ## Chrome:
 https://chrome.google.com/webstore/detail/cdfnncficbjkiddobflmiiceggikbdgc/publish-accepted?hl=en&authuser=0
+
 This extension can be found in lqsound.user.zip
 ## Firefox
 Download Greasemonkey and use lqsound.user.js as the source file.
