@@ -78,7 +78,7 @@ function changeSoundInitializer(btnEnable) {
             setTimeout(function () { failureEnableMessage.style.display = "none"; }, 2000);
         }
         else {
-            // Weak audio file validation. Have tried all different combinations of try/excepts but for some reason nothing will work. If someone else knows JS feel free to improve this!
+            // Weak audio file validation. Have tried different combinations of try/excepts that don't work. If someone else knows JS feel free to improve this!
             let startPos = url.length - 3;
             let mp3 = url.indexOf("mp3", startPos) !== -1,
                 ogg = url.indexOf("ogg", startPos) !== -1,
@@ -180,7 +180,6 @@ function enableSound() {
             }
         }
     });
-    // change this if performance is negatively affected
     observer.observe(document.querySelector("table"), { attributes: false, childList: true, characterData: false, subtree: false });
 }
 
@@ -197,7 +196,7 @@ function notifyMe() {
             icon: 'https://www.washingtonpost.com/resizer/uwlkeOwC_3JqSUXeH8ZP81cHx3I=/arc-anglerfish-washpost-prod-washpost/public/HB4AT3D3IMI6TMPTWIZ74WAR54.jpg',
             body: 'Click to open the queue',
         });
-        // Nothing seems to change the link for the notification.. feel free to improve this!
+
         notification.onclick = function () {
             window.focus();
             this.close();
