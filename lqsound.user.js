@@ -8,41 +8,44 @@
 // @grant        none
 // ==/UserScript==
 
-let audio = new Audio();
+let notificationAudio = new Audio();
 let prevNumClaims, curNumClaims = 0;
 initialize();
 window.setTimeout(enableSound, 1000);
-
+let DEFAULT_SOUND = "http://soundbible.com/grab.php?id=2218&type=mp3";
 
 function initialize() {
-    // Add/remove sound buttons
-    let btn, btnDisable;
-    btn = document.createElement("button");
-    btn.style.width = "auto";
-    btn.style.display = "block";
-    btn.style.margin = "0px auto 20px";
-    btnDisable = btn.cloneNode(true);
-
-    btnDisable.style.display = "none";
+    // HTML element that will contain the relevant functional elements of the script
     let cardBox = document.querySelector(".last-row");
-    btn.textContent = "Enable sound notifications";
-    btn.onclick = function() {
-        audio.muted = false;
-        btn.style.display = "none";
+
+    // Add sound button
+    let btnEnable = document.createElement("button");
+    btnEnable.style.width = "auto";
+    btnEnable.style.display = "none";
+    btnEnable.style.margin = "0px auto 20px";
+    btnEnable.textContent = "Enable sound notifications";
+    btnEnable.onclick = function () {
+        notificationAudio.muted = false;
+        btnEnable.style.display = "none";
         btnDisable.style.display = "block";
     };
+    cardBox.appendChild(btnEnable);
 
+    // Remove sound button
+    let btnDisable = btnEnable.cloneNode(true);
+    btnDisable.style.display = "block";
     btnDisable.textContent = "Disable sound notifications";
-    btnDisable.onclick = function() {
-        audio.muted = true;
+    btnDisable.onclick = function () {
+        notificationAudio.muted = true;
         btnDisable.style.display = "none";
-        btn.style.display = "block";
+        btnEnable.style.display = "block";
     };
+    cardBox.appendChild(btnDisable);
 
-    // request permission on page load
-    let permissionBtn = btn.cloneNode(true);
+    // Request permission for browser notifications on page load
+    let permissionBtn = btnEnable.cloneNode(true);
     permissionBtn.innerHTML = "Enable browser notifications";
-    permissionBtn.onclick = function() {
+    permissionBtn.onclick = function () {
         if (!Notification) {
             alert('Desktop notifications not available in your browser.');
             return;
@@ -55,108 +58,118 @@ function initialize() {
     if (Notification.permission === "granted") {
         permissionBtn.style.display = "none";
     }
+    if (!Notification) {
+        cardBox.appendChild(permissionBtn);
+    }
 
-    // Change sound
-    let inp = document.createElement("input");
-    inp.type = "text";
-    inp.id = "sound-inp";
-    inp.style.minWidth = "300px";
-    inp.style.maxWidth = "75vw";
-    inp.style.backgroundColor = "white";
-    inp.style.border = "solid 1px black";
-    inp.style.padding = "1px 4px";
+    // Change sound functions
+    let div = changeSoundInitializer();
+    cardBox.appendChild(div);
+}
 
-    let successMessage = document.createElement("h6");
-    successMessage.style.color = "green";
-    successMessage.textContent = "Sound successfully changed";
-    successMessage.style.display = "none";
+function changeSoundInitializer() {
+    let dashboardDiv = document.createElement("div");
+    dashboardDiv.style.cssText = "display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center";
 
-    let defaultMessage = document.createElement("h6");
-    defaultMessage.style.color = "green";
-    defaultMessage.textContent = "Sound changed to default";
-    defaultMessage.style.display = "none";
-
-    let failureEnableMessage = successMessage.cloneNode(true);
-    failureEnableMessage.textContent = "Please enable sound notifications first";
-    failureEnableMessage.style.color = "red";
-
-    let failureLinkMessage = failureEnableMessage.cloneNode(true);
-    failureLinkMessage.textContent = "Invalid URL (audio file must be mp3, wav, or ogg)";
-
-    let changeSound = function() {
-        let url = inp.value.replace(/&amp;/g, "&");
-        if (btn.style.display === "block") {
+    let changeSound = function () {
+        let url = soundInp.value.replace(/&amp;/g, "&");
+        if (btnEnable.style.display === "block") {
             failureEnableMessage.style.display = "block";
-            setTimeout(function() {failureEnableMessage.style.display = "none";}, 2000);
+            setTimeout(function () { failureEnableMessage.style.display = "none"; }, 2000);
         }
         else {
             // Weak audio file validation. Have tried all different combinations of try/excepts but for some reason nothing will work. If someone else knows JS feel free to improve this!
             let startPos = url.length - 3;
             let mp3 = url.indexOf("mp3", startPos) !== -1,
                 ogg = url.indexOf("ogg", startPos) !== -1,
-                wav = url.indexOf("wav", startPos) !== -1 ;
+                wav = url.indexOf("wav", startPos) !== -1;
             if (mp3 || ogg || wav) {
-                audio.src = url;
-                audio.load();
+                notificationAudio.src = url;
+                notificationAudio.load();
                 successMessage.style.display = "block";
-                setTimeout(function() {successMessage.style.display = "none";}, 2000);
-                inp.value = "";
+                setTimeout(function () { successMessage.style.display = "none"; }, 2000);
+                soundInp.value = "";
             }
             else {
                 failureLinkMessage.style.display = "block";
-                setTimeout(function() {failureLinkMessage.style.display = "none";}, 5000);
+                setTimeout(function () { failureLinkMessage.style.display = "none"; }, 5000);
             }
         }
     };
-    inp.addEventListener("keypress", function(event) {
+
+    // Message that explains how to change sound
+    let label = document.createElement("label");
+    label.for = "sound-inp";
+    label.innerHTML = "To change the sound that's played, link a sound file URL (for example from <a href='http://soundbible.com/free-sound-effects-1.html' target='_blank'>here</a>)";
+    dashboardDiv.appendChild(label);
+
+    // Text input to allow user to enter URL for new sound
+    let soundInp = document.createElement("input");
+    soundInp.type = "text";
+    soundInp.id = "sound-inp";
+    soundInp.style.minWidth = "300px";
+    soundInp.style.maxWidth = "75vw";
+    soundInp.style.backgroundColor = "white";
+    soundInp.style.border = "solid 1px black";
+    soundInp.style.padding = "1px 4px";
+    soundInp.addEventListener("keypress", function (event) {
         if (event.which === 13) {
             event.preventDefault();
             changeSound();
         }
     });
+    dashboardDiv.appendChild(soundInp);
 
-    let soundBtn = document.createElement("button");
-    soundBtn.innerHTML = "Change sound";
-    soundBtn.style.width = "auto";
-    soundBtn.style.margin = "10px 0 10px";
-    soundBtn.onclick = changeSound;
-    let defaultBtn = soundBtn.cloneNode(true);
+    // Change sound button
+    let changeSoundBtn = document.createElement("button");
+    changeSoundBtn.innerHTML = "Change sound";
+    changeSoundBtn.style.width = "auto";
+    changeSoundBtn.style.margin = "10px 0 10px";
+    changeSoundBtn.onclick = changeSound;
+    dashboardDiv.appendChild(changeSoundBtn);
+
+    // Sound successfully changed message
+    let successMessage = document.createElement("h6");
+    successMessage.style.color = "green";
+    successMessage.textContent = "Sound successfully changed";
+    successMessage.style.display = "none";
+    dashboardDiv.appendChild(successMessage);
+
+    // Sound changed to default message
+    let defaultMessage = document.createElement("h6");
+    defaultMessage.style.color = "green";
+    defaultMessage.textContent = "Sound changed to default";
+    defaultMessage.style.display = "none";
+    dashboardDiv.appendChild(defaultMessage);
+
+    // Failure 1 message: enable notifications
+    let failureEnableMessage = successMessage.cloneNode(true);
+    failureEnableMessage.textContent = "Please enable sound notifications first";
+    failureEnableMessage.style.color = "red";
+    dashboardDiv.appendChild(failureEnableMessage);
+
+    // Failure 2 message: invalid URL
+    let failureLinkMessage = failureEnableMessage.cloneNode(true);
+    failureLinkMessage.textContent = "Invalid URL (audio file must be mp3, wav, or ogg)";
+    dashboardDiv.appendChild(failureLinkMessage);
+
+    // Default sound button
+    let defaultBtn = changeSoundBtn.cloneNode(true);
     defaultBtn.innerHTML = "Default sound";
-    defaultBtn.onclick = function() {
-        audio.src = 'http://soundbible.com/grab.php?id=2218&type=mp3';
+    defaultBtn.onclick = function () {
+        notificationAudio.src = DEFAULT_SOUND;
         defaultMessage.style.display = "block";
-        setTimeout(function() {defaultMessage.style.display = "none";}, 2000);
+        setTimeout(function () { defaultMessage.style.display = "none"; }, 2000);
     };
+    dashboardDiv.appendChild(defaultBtn);
 
 
-
-    let label = document.createElement("label");
-    label.for = "sound-inp";
-    label.innerHTML = "To change default alert, link a sound file URL (for example from <a href='http://soundbible.com/free-sound-effects-1.html' target='_blank'>here</a>)";
-
-    let div = document.createElement("div");
-    div.style.cssText = "display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center";
-    div.appendChild(label);
-    div.appendChild(inp);
-    div.appendChild(soundBtn);
-    div.appendChild(defaultBtn);
-    div.appendChild(successMessage);
-    div.appendChild(defaultMessage);
-    div.appendChild(failureEnableMessage);
-    div.appendChild(failureLinkMessage);
-    cardBox.appendChild(btn);
-    cardBox.appendChild(btnDisable);
-    cardBox.appendChild(permissionBtn);
-    cardBox.appendChild(div);
+    return dashboardDiv;
 }
-
 function enableSound() {
-    let prevNumStudents = document.querySelector("tbody").children.length;
-    let curNumStudents = prevNumStudents;
-    audio.src = 'http://soundbible.com/grab.php?id=2218&type=mp3';
-    audio.muted = true;
-
-    var observer = new MutationObserver(function(mutations) {
+    notificationAudio.src = DEFAULT_SOUND;
+    notificationAudio.muted = true;
+    var observer = new MutationObserver(function (mutations) {
         for (let mutation of mutations) {
             if (mutation.type === "childList" && mutation.addedNodes[0].nodeName == "TBODY") {
                 prevNumClaims = curNumClaims;
@@ -168,9 +181,13 @@ function enableSound() {
         }
     });
     // change this if performance is negatively affected
-    observer.observe(document.querySelector("table"), {attributes: false, childList: true, characterData: false, subtree:false});
+    observer.observe(document.querySelector("table"), { attributes: false, childList: true, characterData: false, subtree: false });
 }
 
+function activateNotifications() {
+    notificationAudio.play();
+    notifyMe();
+}
 function notifyMe() {
     if (Notification.permission !== 'granted') {
         Notification.requestPermission();
@@ -181,14 +198,9 @@ function notifyMe() {
             body: 'Click to open the queue',
         });
         // Nothing seems to change the link for the notification.. feel free to improve this!
-        notification.onclick = function() {
+        notification.onclick = function () {
             window.focus();
             this.close();
         };
     }
-}
-
-function activateNotifications() {
-    audio.play();
-    notifyMe();
 }
