@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LQSound
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.3
 // @description  Audio/browser notification when student joins queue on labqueue.io
 // @author       Chris Barkachi
 // @match        https://www.labqueue.io/queue/
@@ -63,11 +63,11 @@ function initialize() {
     }
 
     // Change sound functions
-    let div = changeSoundInitializer();
+    let div = changeSoundInitializer(btnEnable);
     cardBox.appendChild(div);
 }
 
-function changeSoundInitializer() {
+function changeSoundInitializer(btnEnable) {
     let dashboardDiv = document.createElement("div");
     dashboardDiv.style.cssText = "display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center";
 
