@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 let notificationAudio = new Audio();
-let prevNumClaims, curNumClaims = 0;
+let prevNumClaims = document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
 initialize();
 window.setTimeout(enableSound, 1000);
 let DEFAULT_SOUND = "http://soundbible.com/grab.php?id=2218&type=mp3";
@@ -166,17 +166,17 @@ function changeSoundInitializer(btnEnable) {
 
     return dashboardDiv;
 }
+
 function enableSound() {
     notificationAudio.src = DEFAULT_SOUND;
-    notificationAudio.muted = true;
     var observer = new MutationObserver(function (mutations) {
         for (let mutation of mutations) {
             if (mutation.type === "childList" && mutation.addedNodes[0].nodeName == "TBODY") {
-                prevNumClaims = curNumClaims;
-                curNumClaims = document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
+                let curNumClaims = document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
                 if (curNumClaims > prevNumClaims) {
                     activateNotifications();
                 }
+                prevNumClaims = curNumClaims;
             }
         }
     });
