@@ -9,12 +9,13 @@
 // ==/UserScript==
 
 let notificationAudio = new Audio();
-let prevNumClaims = document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
-initialize();
+let prevNumClaims;
+window.setTimeout(initialize, 500);
 window.setTimeout(enableSound, 1000);
 let DEFAULT_SOUND = "http://soundbible.com/grab.php?id=2218&type=mp3";
 
 function initialize() {
+    prevNumClaims = document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
     // HTML element that will contain the relevant functional elements of the script
     let cardBox = document.querySelector(".last-row");
 
