@@ -8,11 +8,10 @@
 // @grant        none
 // ==/UserScript==
 
+const DEFAULT_SOUND = "http://soundbible.com/grab.php?id=2218&type=mp3";
 let notificationAudio = new Audio();
 let prevNumClaims;
-window.setTimeout(initialize, 500);
-window.setTimeout(enableSound, 1000);
-let DEFAULT_SOUND = "http://soundbible.com/grab.php?id=2218&type=mp3";
+window.onload(initialize);
 
 function initialize() {
     prevNumClaims = document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
@@ -66,6 +65,7 @@ function initialize() {
     // Change sound functions
     let div = changeSoundInitializer(btnEnable);
     cardBox.appendChild(div);
+    enableSound();
 }
 
 function changeSoundInitializer(btnEnable) {
@@ -75,11 +75,11 @@ function changeSoundInitializer(btnEnable) {
     let changeSound = function () {
         let url = soundInp.value.replace(/&amp;/g, "&");
         if (btnEnable.style.display === "block") {
-            failureEnableMessage.style.display = "block";
-            setTimeout(function () { failureEnableMessage.style.display = "none"; }, 2000);
+            failureNotifMsg.style.display = "block";
+            setTimeout(function () { failureNotifMsg.style.display = "none"; }, 2000);
         }
         else {
-            // Weak audio file validation. Have tried different combinations of try/excepts that don't work. If someone else knows JS feel free to improve this!
+            // Weak audio file validation
             let startPos = url.length - 3;
             let mp3 = url.indexOf("mp3", startPos) !== -1,
                 ogg = url.indexOf("ogg", startPos) !== -1,
@@ -87,24 +87,51 @@ function changeSoundInitializer(btnEnable) {
             if (mp3 || ogg || wav) {
                 notificationAudio.src = url;
                 notificationAudio.load();
-                successMessage.style.display = "block";
-                setTimeout(function () { successMessage.style.display = "none"; }, 2000);
+                successMsg.style.display = "block";
+                setTimeout(function () { successMsg.style.display = "none"; }, 2000);
                 soundInp.value = "";
             }
             else {
-                failureLinkMessage.style.display = "block";
-                setTimeout(function () { failureLinkMessage.style.display = "none"; }, 5000);
+                failureURLMsg.style.display = "block";
+                setTimeout(function () { failureURLMsg.style.display = "none"; }, 5000);
             }
         }
     };
+    const instructionElement = addInstructionElement();
+    const soundInp = addSoundInputElement();
+    const changeSoundBtn = addChangeSoundButtonElement();
+    const successMsg = addSuccessMessageElement();
+    const defaultBtn = addDefaultBtnElement(changeSoundBtn);
+    const defaultMsg = addDefaultMessageElement();
+    const failureNotifMsg = addFailureNotificationsElement(successMsg);
+    const failureURLMsg = addFailureInvalidURLElement(failureNotifMsg);
 
-    // Message that explains how to change sound
-    let label = document.createElement("label");
-    label.for = "sound-inp";
-    label.innerHTML = "To change the sound that's played, link a sound file URL (for example from <a href='http://soundbible.com/free-sound-effects-1.html' target='_blank'>here</a>)";
-    dashboardDiv.appendChild(label);
+    defaultBtn.onclick = function () {
+        notificationAudio.src = DEFAULT_SOUND;
+        defaultMsg.style.display = "block";
+        setTimeout(function () { defaultMsg.style.display = "none"; }, 2000);
+    };
+    soundInp.addEventListener("keypress", function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            changeSound();
+        }
+    });
+    changeSoundBtn.onclick = changeSound;
+    const children = [instructionElement, soundInp, changeSoundBtn, successMsg, defaultBtn, defaultMsg, failureNotifMsg, failureURLMsg];
+    buildDivFromChildren(dashboardDiv, children);
+    return dashboardDiv;
+}
 
-    // Text input to allow user to enter URL for new sound
+// Message that explains how to change sound
+function addInstructionElement() {
+    let instructionElement = document.createElement("label");
+    instructionElement.for = "sound-inp";
+    instructionElement.innerHTML = "To change the sound that's played, link a sound file URL (for example from <a href='http://soundbible.com/free-sound-effects-1.html' target='_blank'>here</a>)";
+    return instructionElement;
+}
+// Text input to allow user to enter URL for new sound
+function addSoundInputElement() {
     let soundInp = document.createElement("input");
     soundInp.type = "text";
     soundInp.id = "sound-inp";
@@ -113,59 +140,59 @@ function changeSoundInitializer(btnEnable) {
     soundInp.style.backgroundColor = "white";
     soundInp.style.border = "solid 1px black";
     soundInp.style.padding = "1px 4px";
-    soundInp.addEventListener("keypress", function (event) {
-        if (event.which === 13) {
-            event.preventDefault();
-            changeSound();
-        }
-    });
-    dashboardDiv.appendChild(soundInp);
-
-    // Change sound button
+    return soundInp;
+}
+// Change sound button
+function addChangeSoundButtonElement() {
     let changeSoundBtn = document.createElement("button");
     changeSoundBtn.innerHTML = "Change sound";
     changeSoundBtn.style.width = "auto";
     changeSoundBtn.style.margin = "10px 0 10px";
-    changeSoundBtn.onclick = changeSound;
-    dashboardDiv.appendChild(changeSoundBtn);
+    return changeSoundBtn;
+}
+// Sound successfully changed message
+function addSuccessMessageElement() {
+    let successMsg = document.createElement("h6");
+    successMsg.style.color = "green";
+    successMsg.textContent = "Sound successfully changed";
+    successMsg.style.display = "none";
+    return successMsg;
+}
 
-    // Sound successfully changed message
-    let successMessage = document.createElement("h6");
-    successMessage.style.color = "green";
-    successMessage.textContent = "Sound successfully changed";
-    successMessage.style.display = "none";
-    dashboardDiv.appendChild(successMessage);
-
-    // Sound changed to default message
-    let defaultMessage = document.createElement("h6");
-    defaultMessage.style.color = "green";
-    defaultMessage.textContent = "Sound changed to default";
-    defaultMessage.style.display = "none";
-    dashboardDiv.appendChild(defaultMessage);
-
-    // Failure 1 message: enable notifications
-    let failureEnableMessage = successMessage.cloneNode(true);
-    failureEnableMessage.textContent = "Please enable sound notifications first";
-    failureEnableMessage.style.color = "red";
-    dashboardDiv.appendChild(failureEnableMessage);
-
-    // Failure 2 message: invalid URL
-    let failureLinkMessage = failureEnableMessage.cloneNode(true);
-    failureLinkMessage.textContent = "Invalid URL (audio file must be mp3, wav, or ogg)";
-    dashboardDiv.appendChild(failureLinkMessage);
-
+function addDefaultBtnElement(changeSoundBtn) {
     // Default sound button
     let defaultBtn = changeSoundBtn.cloneNode(true);
     defaultBtn.innerHTML = "Default sound";
-    defaultBtn.onclick = function () {
-        notificationAudio.src = DEFAULT_SOUND;
-        defaultMessage.style.display = "block";
-        setTimeout(function () { defaultMessage.style.display = "none"; }, 2000);
-    };
-    dashboardDiv.appendChild(defaultBtn);
+    return defaultBtn;
+}
 
+// Sound changed to default message
+function addDefaultMessageElement() {
+    let defaultMsg = document.createElement("h6");
+    defaultMsg.style.color = "green";
+    defaultMsg.textContent = "Sound changed to default";
+    defaultMsg.style.display = "none";
+    return defaultMsg;
+}
+// Failure 1 message: enable notifications
+function addFailureNotificationsElement(successMsg) {
+    let failureNotifMsg = successMsg.cloneNode(true);
+    failureNotifMsg.textContent = "Please enable sound notifications first";
+    failureNotifMsg.style.color = "red";
+    return failureNotifMsg;
+}
 
-    return dashboardDiv;
+// Failure 2 message: invalid URL
+function addFailureInvalidURLElement(failureNotifMsg) {
+    let failureURLMsg = failureNotifMsg.cloneNode(true);
+    failureURLMsg.textContent = "Invalid URL (audio file must be mp3, wav, or ogg)";
+    return failureURLMsg;
+}
+
+function buildDivFromChildren(dashboardDiv, children) {
+    for (let childElement of children) {
+        dashboardDiv.appendChild(childElement);
+    }
 }
 
 function enableSound() {
@@ -194,7 +221,7 @@ function notifyMe() {
     }
     else {
         var notification = new Notification('New student on the queue', {
-            icon: 'https://www.washingtonpost.com/resizer/uwlkeOwC_3JqSUXeH8ZP81cHx3I=/arc-anglerfish-washpost-prod-washpost/public/HB4AT3D3IMI6TMPTWIZ74WAR54.jpg',
+            icon: 'hotel-bell.png',
             body: 'Click to open the queue',
         });
 
