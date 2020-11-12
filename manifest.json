@@ -1,0 +1,13 @@
+{
+  "name": "LQSound",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "Audio and browser notification when a student is added to labqueue",
+  "icons": { "128": "play-icon.png" },
+  "content_scripts": [
+   {
+      "matches": ["https://labqueue.io/*", "https://www.labqueue.io/*", "http://www.labqueue.io/*", "http://www.labqueue.io/*"],
+      "js": ["lqsound.user.js"]
+    }
+   ]
+}
