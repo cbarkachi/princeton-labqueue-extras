@@ -8,7 +8,7 @@
 // @grant        none
 // ==/UserScript==
 
-const DEFAULT_SOUND = "http://soundbible.com/grab.php?id=2218&type=mp3";
+const DEFAULT_SOUND = "https://soundbible.com/grab.php?id=2218&type=mp3";
 let notificationAudio = new Audio();
 let prevNumClaims;
 window.onload(initialize);
