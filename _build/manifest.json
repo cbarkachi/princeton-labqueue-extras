@@ -7,7 +7,15 @@
   "content_scripts": [
    {
       "matches": ["https://labqueue.io/*", "https://www.labqueue.io/*", "http://www.labqueue.io/*", "http://www.labqueue.io/*"],
-      "js": ["labqueue.user.js"]
+      "js": ["content.js"]
     }
+   ],
+   "browser_action": {
+     "default_popup": "popup.html",
+     "default_icon": "play-icon.png"
+   },
+   "permissions": [
+     "activeTab",
+     "storage"
    ]
 }

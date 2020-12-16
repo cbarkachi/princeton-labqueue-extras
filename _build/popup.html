@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Princeton LabQueue Extras</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="options">
+      <div class="d-flex justify-content-center form-group">
+        <label class="switch">Sound notifications</label>
+        <input type="checkbox" id="sound-notifications" />
+      </div>
+      <div class="d-flex justify-content-center form-group">
+        <label class="switch">Default sound</label>
+        <input type="checkbox" id="default-sound" />
+      </div>
+      <!-- To change the sound that's played, link a sound file URL (for example from <a href='http://soundbible.com/free-sound-effects-1.html' target='_blank'>here</a>)" -->
+      <form class="d-flex justify-content-center form-group" id="alternate-sound-form">
+        <input type="text" id="alternate-sound-url" placeholder="Alternate sound URL..." />
+        <input type="submit" value="Change" />
+      </form>
+      <div id="status">
+        <h5 class="status-message status-message-success" id="msg-sound-change">Sound successfully changed</h5>
+        <h5 class="status-message status-message-success" id="msg-sound-default">Sound changed to default</h5>
+        <h5 class="status-message status-message-failure" id="msg-enable-notifications">Please enable sound
+          notifications first</h5>
+        <h5 class="status-message status-message-failure" id="msg-invalid-url">Invalid URL (audio file must be mp3, wav,
+          or
+          ogg)</h5>
+      </div>
+      <!-- <div class="d-flex justify-content-center form-group" id="notifications-div">
+        <label class="switch">Enable browser notifications</label>
+        <input type="button" id="browser-notifications" />
+      </div> -->
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+
+</html>

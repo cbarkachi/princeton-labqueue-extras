@@ -1,0 +1,33 @@
+{
+  "name": "princeton-labqueue-extras",
+  "version": "1.0.0",
+  "description": "For use with labqueue.io - allows the user to choose a sound that will play each time a student is added to the queue, either when they first log on or are added through a \"reopen.\" Also allows enabling browser notifications that navigate back to the queue. Configuration options appear below the queue table.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc popup.ts --outdir _build && tsc content.ts --outdir _build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbarkachi/princeton-labqueue-extras.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbarkachi/princeton-labqueue-extras/issues"
+  },
+  "homepage": "https://github.com/cbarkachi/princeton-labqueue-extras#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "eslint": "^7.15.0",
+    "eslint-config": "^0.3.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-prettier": "^3.3.0",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "@types/chrome": "0.0.127",
+    "typescript": "^4.1.3"
+  }
+}
