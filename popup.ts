@@ -22,16 +22,17 @@ function addListeners() {
   const toggleSoundNotifications = document.getElementById(
     "sound-notifications"
   ) as HTMLInputElement;
-  toggleSoundNotifications.checked = localStorage.getItem("muted") === null;
+  toggleSoundNotifications.checked =
+    localStorage.getItem("soundEnabled") === null;
   toggleSoundNotifications.onchange = () => {
     if (toggleSoundNotifications.checked) {
-      localStorage.removeItem("muted");
+      localStorage.removeItem("soundEnabled");
       defaultGroup.style.display = "flex";
       formAlternateSound.style.display = toggleDefaultSound.checked
         ? "none"
         : "flex";
     } else {
-      localStorage.setItem("muted", "false");
+      localStorage.setItem("soundEnabled", "false");
       defaultGroup.style.display = "none";
       formAlternateSound.style.display = "none";
     }
@@ -84,6 +85,19 @@ function addListeners() {
       } else {
         brieflyShowMessage(msgInvalidURL);
       }
+    }
+  };
+
+  // mail:to hyperlinks
+  const toggleHyperlinks = document.getElementById(
+    "email-hyperlinks"
+  ) as HTMLInputElement;
+  toggleHyperlinks.checked = localStorage.getItem("hyperlinks") !== null;
+  toggleHyperlinks.onchange = () => {
+    if (toggleHyperlinks.checked) {
+      localStorage.setItem("hyperlinks", "true");
+    } else {
+      localStorage.removeItem("hyperlinks");
     }
   };
 }

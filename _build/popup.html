@@ -12,12 +12,19 @@
   <div class="wrapper">
     <div class="options">
       <div class="d-flex justify-content-center form-group">
+        <label class="switch">Email hyperlinks</label>
+        <input type="checkbox" class="checkbox" id="email-hyperlinks" />
+        <label for="email-hyperlinks" class="switch-check"></label>
+      </div>
+      <div class="d-flex justify-content-center form-group">
         <label class="switch">Sound notifications</label>
-        <input type="checkbox" id="sound-notifications" />
+        <input type="checkbox" class="checkbox" id="sound-notifications" />
+        <label for="sound-notifications" class="switch-check"></label>
       </div>
       <div class="d-flex justify-content-center form-group" id="default-group">
         <label class="switch">Default sound</label>
-        <input type="checkbox" id="default-sound" />
+        <input type="checkbox" class="checkbox" id="default-sound" />
+        <label for="default-sound" class="switch-check"></label>
       </div>
       <!-- To change the sound that's played, link a sound file URL (for example from <a href='http://soundbible.com/free-sound-effects-1.html' target='_blank'>here</a>)" -->
       <form class="d-flex justify-content-center form-group" id="alternate-sound-form">

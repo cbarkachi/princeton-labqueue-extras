@@ -14,17 +14,18 @@ function addListeners() {
     var msgInvalidURL = document.getElementById("msg-invalid-url");
     // Toggles
     var toggleSoundNotifications = document.getElementById("sound-notifications");
-    toggleSoundNotifications.checked = localStorage.getItem("muted") === null;
+    toggleSoundNotifications.checked =
+        localStorage.getItem("soundEnabled") === null;
     toggleSoundNotifications.onchange = function () {
         if (toggleSoundNotifications.checked) {
-            localStorage.removeItem("muted");
+            localStorage.removeItem("soundEnabled");
             defaultGroup.style.display = "flex";
             formAlternateSound.style.display = toggleDefaultSound.checked
                 ? "none"
                 : "flex";
         }
         else {
-            localStorage.setItem("muted", "false");
+            localStorage.setItem("soundEnabled", "false");
             defaultGroup.style.display = "none";
             formAlternateSound.style.display = "none";
         }
@@ -75,6 +76,17 @@ function addListeners() {
             else {
                 brieflyShowMessage(msgInvalidURL);
             }
+        }
+    };
+    // mail:to hyperlinks
+    var toggleHyperlinks = document.getElementById("email-hyperlinks");
+    toggleHyperlinks.checked = localStorage.getItem("hyperlinks") !== null;
+    toggleHyperlinks.onchange = function () {
+        if (toggleHyperlinks.checked) {
+            localStorage.setItem("hyperlinks", "true");
+        }
+        else {
+            localStorage.removeItem("hyperlinks");
         }
     };
 }
