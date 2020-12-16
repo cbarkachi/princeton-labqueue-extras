@@ -9,6 +9,10 @@ function brieflyShowMessage(msg) {
 }
 function addListeners() {
   // Messages
+  const msgSoundChanged = document.getElementById("msg-sound-change");
+  const msgDefaultSoundEnabled = document.getElementById(
+    "msg-default-sound-enabled"
+  );
   const msgEnableNotifications = document.getElementById(
     "msg-enable-notifications"
   );
@@ -22,25 +26,41 @@ function addListeners() {
   toggleSoundNotifications.onchange = () => {
     if (toggleSoundNotifications.checked) {
       localStorage.removeItem("muted");
+      defaultGroup.style.display = "flex";
+      formAlternateSound.style.display = toggleDefaultSound.checked
+        ? "none"
+        : "flex";
     } else {
       localStorage.setItem("muted", "false");
+      defaultGroup.style.display = "none";
+      formAlternateSound.style.display = "none";
     }
   };
 
   const toggleDefaultSound = document.getElementById(
     "default-sound"
   ) as HTMLInputElement;
-  toggleDefaultSound.checked = localStorage.getItem("src") === null;
+  const defaultGroup = document.getElementById("default-group");
+  defaultGroup.style.display = toggleSoundNotifications.checked
+    ? "flex"
+    : "none";
+  toggleDefaultSound.checked = localStorage.getItem("default") === null;
   toggleDefaultSound.onchange = () => {
     if (toggleDefaultSound.checked) {
       localStorage.removeItem("default");
+      formAlternateSound.style.display = "none";
     } else {
       localStorage.setItem("default", "false");
+      formAlternateSound.style.display = "flex";
     }
   };
 
   // Alternate sound form
   const formAlternateSound = document.getElementById("alternate-sound-form");
+  formAlternateSound.style.display =
+    toggleSoundNotifications.checked && !toggleDefaultSound.checked
+      ? "flex"
+      : "none";
   const fieldAlternateSound = document.getElementById(
     "alternate-sound-url"
   ) as HTMLInputElement;
@@ -49,6 +69,8 @@ function addListeners() {
     const url = fieldAlternateSound.value.replace(/&amp;/g, "&");
     if (!toggleSoundNotifications.checked) {
       brieflyShowMessage(msgEnableNotifications);
+    } else if (toggleDefaultSound.checked) {
+      brieflyShowMessage(msgDefaultSoundEnabled);
     } else {
       // Weak audio file validation
       const startPos = url.length - 3;
@@ -58,6 +80,7 @@ function addListeners() {
       if (mp3 || ogg || wav) {
         localStorage.setItem("src", url);
         fieldAlternateSound.value = "";
+        brieflyShowMessage(msgSoundChanged);
       } else {
         brieflyShowMessage(msgInvalidURL);
       }

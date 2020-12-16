@@ -7,8 +7,10 @@ window.onload = function () {
 };
 function init() {
     document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
-    var curSound = localStorage.getItem("src");
-    notificationAudio.src = curSound === null ? DEFAULT_SOUND : curSound;
+    notificationAudio.src =
+        localStorage.getItem("default") === null
+            ? DEFAULT_SOUND
+            : localStorage.getItem("src");
     var observer = new MutationObserver(function (mutations) {
         for (var _i = 0, mutations_1 = mutations; _i < mutations_1.length; _i++) {
             var mutation = mutations_1[_i];

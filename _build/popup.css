@@ -35,23 +35,27 @@ body {
 input[type="text"] {
   height: 1.5rem;
   width: 60%;
+  font-family: "Raleway";
+  padding-left: 0.6rem;
 }
 input[type="submit"] {
-  font-size: 100%;
+  font-size: 60%;
+  font-family: "Raleway";
+  font-weight: bold;
 }
 
 #status {
-  margin-bottom: 2rem;
-  height: 1rem;
+  margin-bottom: 2.4rem;
+  /* height: 2rem; */
 }
 .status-message {
   display: none;
 }
 .status-message-success {
-  color: green;
+  color: white;
 }
 .status-message-failure {
-  color: red;
+  color: white;
 }
 
 /* input[type="checkbox"] {
