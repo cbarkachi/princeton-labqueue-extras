@@ -1,4 +1,4 @@
-# LQSound
+# Princeton LabQueue Extras
 For use with labqueue.io - allows the user to choose a sound that will play each time a student is added to the queue, either when they first log on or are added through a "reopen." Also allows enabling browser notifications that navigate back to the queue. Configuration options appear below the queue table.
 
 ## @labTA's
