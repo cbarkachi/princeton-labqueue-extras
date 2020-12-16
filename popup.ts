@@ -22,17 +22,18 @@ function addListeners() {
   const toggleSoundNotifications = document.getElementById(
     "sound-notifications"
   ) as HTMLInputElement;
-  toggleSoundNotifications.checked =
-    localStorage.getItem("soundEnabled") === null;
+  chrome.storage.sync.get("soundEnabled", (value) => {
+    toggleSoundNotifications.checked = value.soundEnabled === undefined;
+  });
   toggleSoundNotifications.onchange = () => {
     if (toggleSoundNotifications.checked) {
-      localStorage.removeItem("soundEnabled");
+      chrome.storage.sync.remove("soundEnabled");
       defaultGroup.style.display = "flex";
       formAlternateSound.style.display = toggleDefaultSound.checked
         ? "none"
         : "flex";
     } else {
-      localStorage.setItem("soundEnabled", "false");
+      chrome.storage.sync.set({ soundEnabled: "false" });
       defaultGroup.style.display = "none";
       formAlternateSound.style.display = "none";
     }
@@ -48,10 +49,10 @@ function addListeners() {
   toggleDefaultSound.checked = localStorage.getItem("default") === null;
   toggleDefaultSound.onchange = () => {
     if (toggleDefaultSound.checked) {
-      localStorage.removeItem("default");
+      chrome.storage.sync.remove("default");
       formAlternateSound.style.display = "none";
     } else {
-      localStorage.setItem("default", "false");
+      chrome.storage.sync.set({ default: "false" });
       formAlternateSound.style.display = "flex";
     }
   };
@@ -79,7 +80,7 @@ function addListeners() {
       const ogg = url.indexOf("ogg", startPos) !== -1;
       const wav = url.indexOf("wav", startPos) !== -1;
       if (mp3 || ogg || wav) {
-        localStorage.setItem("src", url);
+        chrome.storage.sync.set({ src: url });
         fieldAlternateSound.value = "";
         brieflyShowMessage(msgSoundChanged);
       } else {
@@ -92,12 +93,14 @@ function addListeners() {
   const toggleHyperlinks = document.getElementById(
     "email-hyperlinks"
   ) as HTMLInputElement;
-  toggleHyperlinks.checked = localStorage.getItem("hyperlinks") !== null;
+  chrome.storage.sync.get("hyperlinks", (value) => {
+    toggleHyperlinks.checked = value.hyperlinks === "true";
+  });
   toggleHyperlinks.onchange = () => {
     if (toggleHyperlinks.checked) {
-      localStorage.setItem("hyperlinks", "true");
+      chrome.storage.sync.set({ hyperlinks: "true" });
     } else {
-      localStorage.removeItem("hyperlinks");
+      chrome.storage.sync.remove("hyperlinks");
     }
   };
 }

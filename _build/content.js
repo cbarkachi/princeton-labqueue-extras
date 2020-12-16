@@ -1,7 +1,6 @@
 /* eslint-disable require-jsdoc */
 var notificationAudio = new Audio();
 var DEFAULT_SOUND = "https://soundbible.com/grab.php?id=2218&type=mp3";
-alert("bitesdf");
 var prevNumClaims;
 window.onload = function () {
     setTimeout(init, 2000);
@@ -11,29 +10,29 @@ function init() {
     enableSound();
 }
 function enableHyperlinks() {
-    if (localStorage.getItem("hyperlinks") === null) {
-        alert("rip");
-        return;
-    }
-    alert("yo");
-    var tBody = document.getElementsByTagName("tbody").item(0);
-    var rows = tBody.childNodes;
-    rows.forEach(function (row) {
-        try {
-            var cols = row.childNodes;
-            var netIdCol = cols[2];
-            var netId = netIdCol.innerHTML;
-            netIdCol.innerHTML = "<a href=\u2018mailto:" + netId + "@princeton.edu\u2019>" + netId + "</a>";
+    chrome.storage.sync.get("hyperlinks", function (value) {
+        if (value.hyperlinks === undefined) {
+            return;
         }
-        catch (_a) { }
+        var tBody = document.getElementsByTagName("tbody").item(0);
+        var rows = tBody.childNodes;
+        rows.forEach(function (row) {
+            try {
+                var cols = row.childNodes;
+                var netIdCol = cols[2];
+                var netId = netIdCol.innerHTML;
+                netIdCol.innerHTML = "<a href=\u2018mailto:" + netId + "@princeton.edu\u2019>" + netId + "</a>";
+            }
+            catch (_a) { }
+        });
     });
 }
 function enableSound() {
     document.querySelector("tbody").outerHTML.split("CLAIM").length - 1;
-    notificationAudio.src =
-        localStorage.getItem("default") === null
-            ? DEFAULT_SOUND
-            : localStorage.getItem("src");
+    chrome.storage.sync.get("default", function (value) {
+        notificationAudio.src =
+            value["default"] === undefined ? DEFAULT_SOUND : value["default"];
+    });
     var observer = new MutationObserver(function (mutations) {
         for (var _i = 0, mutations_1 = mutations; _i < mutations_1.length; _i++) {
             var mutation = mutations_1[_i];
@@ -56,9 +55,11 @@ function enableSound() {
 }
 // helpers
 function activateNotifications() {
-    if (localStorage.getItem("soundEnabled") === null) {
-        notificationAudio.play();
-    }
+    chrome.storage.sync.get("soundEnabled", function (value) {
+        if (value.soundEnabled === undefined) {
+            notificationAudio.play();
+        }
+    });
     if (Notification.permission !== "granted") {
         Notification.requestPermission();
     }

@@ -14,18 +14,19 @@ function addListeners() {
     var msgInvalidURL = document.getElementById("msg-invalid-url");
     // Toggles
     var toggleSoundNotifications = document.getElementById("sound-notifications");
-    toggleSoundNotifications.checked =
-        localStorage.getItem("soundEnabled") === null;
+    chrome.storage.sync.get("soundEnabled", function (value) {
+        toggleSoundNotifications.checked = value.soundEnabled === undefined;
+    });
     toggleSoundNotifications.onchange = function () {
         if (toggleSoundNotifications.checked) {
-            localStorage.removeItem("soundEnabled");
+            chrome.storage.sync.remove("soundEnabled");
             defaultGroup.style.display = "flex";
             formAlternateSound.style.display = toggleDefaultSound.checked
                 ? "none"
                 : "flex";
         }
         else {
-            localStorage.setItem("soundEnabled", "false");
+            chrome.storage.sync.set({ soundEnabled: "false" });
             defaultGroup.style.display = "none";
             formAlternateSound.style.display = "none";
         }
@@ -38,11 +39,11 @@ function addListeners() {
     toggleDefaultSound.checked = localStorage.getItem("default") === null;
     toggleDefaultSound.onchange = function () {
         if (toggleDefaultSound.checked) {
-            localStorage.removeItem("default");
+            chrome.storage.sync.remove("default");
             formAlternateSound.style.display = "none";
         }
         else {
-            localStorage.setItem("default", "false");
+            chrome.storage.sync.set({ "default": "false" });
             formAlternateSound.style.display = "flex";
         }
     };
@@ -69,7 +70,7 @@ function addListeners() {
             var ogg = url.indexOf("ogg", startPos) !== -1;
             var wav = url.indexOf("wav", startPos) !== -1;
             if (mp3 || ogg || wav) {
-                localStorage.setItem("src", url);
+                chrome.storage.sync.set({ src: url });
                 fieldAlternateSound.value = "";
                 brieflyShowMessage(msgSoundChanged);
             }
@@ -80,13 +81,15 @@ function addListeners() {
     };
     // mail:to hyperlinks
     var toggleHyperlinks = document.getElementById("email-hyperlinks");
-    toggleHyperlinks.checked = localStorage.getItem("hyperlinks") !== null;
+    chrome.storage.sync.get("hyperlinks", function (value) {
+        toggleHyperlinks.checked = value.hyperlinks === "true";
+    });
     toggleHyperlinks.onchange = function () {
         if (toggleHyperlinks.checked) {
-            localStorage.setItem("hyperlinks", "true");
+            chrome.storage.sync.set({ hyperlinks: "true" });
         }
         else {
-            localStorage.removeItem("hyperlinks");
+            chrome.storage.sync.remove("hyperlinks");
         }
     };
 }
