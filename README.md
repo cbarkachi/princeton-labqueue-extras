@@ -4,7 +4,7 @@ For use with labqueue.io - allows the user to choose a sound that will play each
 ## @labTA's
 Feel free to modify the source code, especially if you know Javascript! I just learned JS/CSS this week to write this so I'm positive there are more efficient ways of doing things.
 
-# INSTRUCTIONS TO USE
+# INSTALLATION INSTRUCTIONS
 ## Chrome:
 https://chrome.google.com/webstore/detail/cdfnncficbjkiddobflmiiceggikbdgc/publish-accepted?hl=en&authuser=0
 
