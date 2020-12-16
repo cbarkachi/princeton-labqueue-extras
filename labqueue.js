@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         LQSound
+// @name         Princeton LabQueue Extras
 // @namespace    http://tampermonkey.net/
 // @version      0.3
 // @description  Audio/browser notification when student joins queue on labqueue.io
